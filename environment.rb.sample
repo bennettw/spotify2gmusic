@@ -1,0 +1,2 @@
+ENV['SPOTIFY_USERNAME'] = 'username'
+ENV['SPOTIFY_PASSWORD'] = 'password'
