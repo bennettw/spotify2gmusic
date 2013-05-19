@@ -10,13 +10,13 @@ def process_playlist(playlist, playlist_name=nil)
   #puts "#{playlist.name} - #{playlist.class.name}"
   playlist_json[:playlist_name] = playlist_name || playlist.name
   playlist_json[:song_count] = playlist.size
-  playlist_json[:spotify_uri] = playlist.to_link.to_s
+  playlist_json[:spotify_uri] = playlist.to_link.to_str if playlist.to_link
 
   tracks = playlist.tracks
   tracks_json = {}
   tracks.each do |track|
     #puts "  #{track.artist.name} - #{track.album.name} (#{track.album.release_year}) - #{track.name}"
-    tracks_json[track.to_link] = [:title => track.name, :artist => track.artist.name, :album => track.album.name, :date_added => track.added_at, :index => track.index]
+    tracks_json[track.to_link.to_str] = [:index => track.index, :title => track.name, :artist => track.artist.name, :album => track.album.name, :date_added => track.added_at]
   end
 
   playlist_json[:tracks] = tracks_json
@@ -33,9 +33,8 @@ puts "Logged in as #{@session.user.display_name}"
 playlists = @session.container.contents
 
 playlists.each do |playlist|
-
   next if playlist.instance_of? Hallon::PlaylistContainer::Folder
-  process_playlist playlist
+  process_playlist playlist if playlist
 end
 
 puts "Processing Starred playist"
