@@ -5,17 +5,10 @@ require 'hallon'
 require './environment.rb'
 require './example_support.rb'
 
-
-puts "Logged in as #{@session.user.display_name}"
-
-playlists = @session.container.contents
-playlist = playlists.first
-playlists.each do |playlist|
-
-  next if playlist.instance_of? Hallon::PlaylistContainer::Folder
+def process_playlist(playlist, playlist_name=nil)
   playlist_json = Hash.new
   #puts "#{playlist.name} - #{playlist.class.name}"
-  playlist_json[:playlist_name] = playlist.name
+  playlist_json[:playlist_name] = playlist_name || playlist.name
   playlist_json[:song_count] = playlist.size
   playlist_json[:spotify_uri] = playlist.to_link.to_s
 
@@ -28,10 +21,24 @@ playlists.each do |playlist|
 
   playlist_json[:tracks] = tracks_json
   #puts JSON.pretty_generate playlist_json
-  File.open("out/#{playlist.name.gsub('/', '-')}.json", "w") do |file|
+  filename = playlist_name || playlist.name.gsub('/', '-')
+  File.open("out/#{filename}.json", "w") do |file|
     file.write JSON.pretty_generate playlist_json
   end
   puts "#{playlist.name}"
-
 end
+
+puts "Logged in as #{@session.user.display_name}"
+
+playlists = @session.container.contents
+
+playlists.each do |playlist|
+
+  next if playlist.instance_of? Hallon::PlaylistContainer::Folder
+  process_playlist playlist
+end
+
+puts "Processing Starred playist"
+process_playlist @session.starred, "Starred"
+
 
