@@ -1,2 +1,2 @@
-ENV['SPOTIFY_USERNAME'] = 'username'
-ENV['SPOTIFY_PASSWORD'] = 'password'
+ENV['SPOTIFY_USERNAME'] = ''
+ENV['SPOTIFY_PASSWORD'] = ''
