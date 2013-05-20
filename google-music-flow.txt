@@ -1,0 +1,3 @@
+$('#new-music').click();
+$('input[class="playlist-name"]').setAttribute('value', 'test')
+$('button[name="Save"]').click()
